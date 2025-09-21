@@ -69,7 +69,7 @@ const getOpenSettings = async (message, notification) => {
             maxAddressLen: res["maxAddressLen"] || 30,
             needAuth: res["needAuth"] || false,
             defaultDomains: res["defaultDomains"] || [],
-            domains: res["domains"].map((domain, index) => {
+            domains: res["domains"]?.map((domain, index) => {
                 return {
                     label: domainLabels.length > index ? domainLabels[index] : domain,
                     value: domain
@@ -84,7 +84,6 @@ const getOpenSettings = async (message, notification) => {
             enableIndexAbout: res["enableIndexAbout"] || false,
             copyright: res["copyright"] || openSettings.value.copyright,
             cfTurnstileSiteKey: res["cfTurnstileSiteKey"] || "",
-            enableWebhook: res["enableWebhook"] || false,
             isS3Enabled: res["isS3Enabled"] || false,
         });
         if (openSettings.value.needAuth) {
