@@ -336,12 +336,10 @@ export const handleListQuery = async (
         return c.text("Invalid offset", 400)
     }
     const resultsQuery = `${query} order by id desc limit ? offset ?`;
-    const { results } = await c.env.DB.prepare(resultsQuery).bind(
-        ...params, limit, offset
-    ).all();
+    const { results } = await c.env.DB.prepare(resultsQuery).all(...params, limit, offset);
     const count = offset == 0 ? await c.env.DB.prepare(
         countQuery
-    ).bind(...params).first("count") : 0;
+    ).bind(...params).get("count") : 0;
     return c.json({ results, count });
 }
 

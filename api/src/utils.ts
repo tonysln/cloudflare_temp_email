@@ -42,7 +42,7 @@ export const getSetting = async (
     try {
         const value = await c.env.DB.prepare(
             `SELECT value FROM settings where key = ?`
-        ).bind(key).first<string>("value");
+        ).bind(key).get<string>("value")?.value;
         return value;
     } catch (error) {
         console.error(`GetSetting: Failed to get ${key}`, error);
@@ -57,7 +57,7 @@ export const saveSetting = async (
     await c.env.DB.prepare(
         `INSERT or REPLACE INTO settings (key, value) VALUES (?, ?)`
         + ` ON CONFLICT(key) DO UPDATE SET value = ?, updated_at = datetime('now')`
-    ).bind(key, value, value).run();
+    ).run(key, value, value);
     return true;
 }
 

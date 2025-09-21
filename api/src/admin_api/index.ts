@@ -118,7 +118,7 @@ api.get('/admin/show_password/:id', async (c) => {
     const { id } = c.req.param();
     const name = await c.env.DB.prepare(
         `SELECT name FROM address WHERE id = ? `
-    ).bind(id).first("name");
+    ).bind(id).get("name");
     const jwt = await Jwt.sign({
         address: name,
         address_id: id
@@ -211,22 +211,22 @@ api.delete('/admin/sendbox/:id', async (c) => {
 api.get('/admin/statistics', async (c) => {
     const { count: mailCount } = await c.env.DB.prepare(
         `SELECT count(*) as count FROM raw_mails`
-    ).first<{ count: number }>() || {};
+    ).get<{ count: number }>() || {};
     const { count: addressCount } = await c.env.DB.prepare(
         `SELECT count(*) as count FROM address`
-    ).first<{ count: number }>() || {};
+    ).get<{ count: number }>() || {};
     const { count: activeAddressCount7days } = await c.env.DB.prepare(
         `SELECT count(*) as count FROM address where updated_at > datetime('now', '-7 day')`
-    ).first<{ count: number }>() || {};
+    ).get<{ count: number }>() || {};
     const { count: activeAddressCount30days } = await c.env.DB.prepare(
         `SELECT count(*) as count FROM address where updated_at > datetime('now', '-30 day')`
-    ).first<{ count: number }>() || {};
+    ).get<{ count: number }>() || {};
     const { count: sendMailCount } = await c.env.DB.prepare(
         `SELECT count(*) as count FROM sendbox`
-    ).first<{ count: number }>() || {};
+    ).get<{ count: number }>() || {};
     const { count: userCount } = await c.env.DB.prepare(
         `SELECT count(*) as count FROM users`
-    ).first<{ count: number }>() || {};
+    ).get<{ count: number }>() || {};
     return c.json({
         mailCount: mailCount,
         addressCount: addressCount,
