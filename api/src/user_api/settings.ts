@@ -36,7 +36,7 @@ export default {
         // check if user exists
         const db_user_id = await c.env.DB.prepare(
             `SELECT id FROM users where id = ?`
-        ).bind(user.user_id).first<number | undefined | null>("id");
+        ).bind(user.user_id).get<number | undefined | null>("id");
         if (!db_user_id) {
             return c.text(msgs.UserNotFoundMsg, 400);
         }
@@ -69,7 +69,7 @@ export default {
             await c.env.DB.prepare(
                 `UPDATE address SET updated_at = datetime('now') where id IN `
                 + `(SELECT address_id FROM users_address WHERE user_id = ?)`
-            ).bind(user.user_id).run();
+            ).run(user.user_id);
 
         } catch (e) {
             console.warn("Failed to update address updated_at")

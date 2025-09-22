@@ -32,7 +32,7 @@ api.get('/api/mail/:mail_id', async (c) => {
     const { mail_id } = c.req.param();
     const result = await c.env.DB.prepare(
         `SELECT * FROM raw_mails where id = ? and address = ?`
-    ).bind(mail_id, address).first();
+    ).bind(mail_id, address).get();
     return c.json(result);
 })
 
@@ -62,7 +62,7 @@ api.get('/api/settings', async (c) => {
         try {
             const db_address_id = await c.env.DB.prepare(
                 `SELECT id FROM address where id = ? `
-            ).bind(address_id).first("id");
+            ).bind(address_id).get("id");
             if (!db_address_id) {
                 return c.text(msgs.InvalidAddressMsg, 400)
             }
@@ -75,7 +75,7 @@ api.get('/api/settings', async (c) => {
         if (!address_id) {
             const db_address_id = await c.env.DB.prepare(
                 `SELECT id FROM address where name = ? `
-            ).bind(address).first("id");
+            ).bind(address).get("id");
             if (!db_address_id) {
                 return c.text(msgs.InvalidAddressMsg, 400)
             }
@@ -90,7 +90,7 @@ api.get('/api/settings', async (c) => {
     const is_no_limit_send_balance = user_role && no_limit_roles.includes(user_role);
     const balance = is_no_limit_send_balance ? 99999 : await c.env.DB.prepare(
         `SELECT balance FROM address_sender where address = ? and enabled = 1`
-    ).bind(address).first("balance");
+    ).bind(address).get("balance");
     return c.json({
         address: address,
         send_balance: balance || 0,

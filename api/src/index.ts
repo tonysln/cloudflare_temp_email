@@ -37,10 +37,13 @@ app.use('/*', async (c, next) => {
 
 	c.env.DB = db;
 	c.env.JWT_SECRET = Deno.env.get("JWT_SECRET");
+	c.env.PREFIX = Deno.env.get("PREFIX");
 	c.env.DOMAINS = [ Deno.env.get("DOMAIN") ];
 	c.env.DEFAULT_LANG = Deno.env.get("DEFAULT_LANG");
-	c.env.PASSWORDS = [ Deno.env.get("PASSWORD") ];
 	c.env.ADMIN_PASSWORDS = [ Deno.env.get("ADMIN_PASSWORD") ];
+	c.env.ENABLE_USER_CREATE_EMAIL = Deno.env.get("ENABLE_USER_CREATE_EMAIL");
+	c.env.ENABLE_USER_DELETE_EMAIL = Deno.env.get("ENABLE_USER_DELETE_EMAIL");
+	c.env.DISABLE_CUSTOM_ADDRESS_NAME = Deno.env.get("DISABLE_CUSTOM_ADDRESS_NAME");
 
 	// check if the request is for static files
 	if (c.env.ASSETS && !API_PATHS.some(path => c.req.path.startsWith(path))) {

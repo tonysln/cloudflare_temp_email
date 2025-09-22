@@ -74,7 +74,7 @@ export async function updateAddressUpdatedAt(
     try {
         await c.env.DB.prepare(
             `UPDATE address SET updated_at = datetime('now') where name = ?`
-        ).bind(address).run();
+        ).run(address);
     } catch (e) {
         console.warn("Failed to update address updated_at", e);
     }
@@ -147,10 +147,10 @@ export const newAddress = async (
     // create address
     name = name + "@" + domain;
     try {
-        const { success } = await c.env.DB.prepare(
+        const res = await c.env.DB.prepare(
             `INSERT INTO address(name) VALUES(?)`
-        ).bind(name).run();
-        if (!success) {
+        ).run(name);
+        if (!res) {
             throw new Error("Failed to create address")
         }
         await updateAddressUpdatedAt(c, name);
@@ -163,7 +163,7 @@ export const newAddress = async (
     }
     const address_id = await c.env.DB.prepare(
         `SELECT id FROM address where name = ?`
-    ).bind(name).first<number>("id");
+    ).bind(name).get<number>("id")?.id;
     // create jwt
     const jwt = await Jwt.sign({
         address: name,
@@ -384,7 +384,7 @@ export const commonGetUserRole = async (
     const user_roles = getUserRoles(c);
     const role_text = await c.env.DB.prepare(
         `SELECT role_text FROM user_roles where user_id = ?`
-    ).bind(user_id).first<string | undefined | null>("role_text");
+    ).bind(user_id).get<string | undefined | null>("role_text")?.role_text;
     return role_text ? user_roles.find((r) => r.role === role_text) : null;
 }
 
