@@ -459,3 +459,14 @@ export async function triggerAnotherWorker(
         }
     }
 }
+
+export const populateEnvVariables = async (c: Context<HonoCustomType, "/*", {}>): Promise<void> => {
+    c.env.JWT_SECRET = Deno.env.get("JWT_SECRET");
+	c.env.PREFIX = Deno.env.get("PREFIX");
+	c.env.DOMAINS = [ Deno.env.get("DOMAIN") ];
+	c.env.DEFAULT_LANG = Deno.env.get("DEFAULT_LANG");
+	c.env.ADMIN_PASSWORDS = [ Deno.env.get("ADMIN_PASSWORD") ];
+	c.env.ENABLE_USER_CREATE_EMAIL = Deno.env.get("ENABLE_USER_CREATE_EMAIL");
+	c.env.ENABLE_USER_DELETE_EMAIL = Deno.env.get("ENABLE_USER_DELETE_EMAIL");
+	c.env.DISABLE_CUSTOM_ADDRESS_NAME = Deno.env.get("DISABLE_CUSTOM_ADDRESS_NAME");
+}
